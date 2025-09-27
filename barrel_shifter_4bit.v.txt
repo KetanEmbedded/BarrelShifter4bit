@@ -1,0 +1,33 @@
+// 4-bit Barrel Shifter - Behavioral Modeling
+module barrel_shifter4 (
+    input  [3:0] din,
+    input  [1:0] shamt,
+    input        dir,     // 0 = left, 1 = right
+    input        rotate,  // 0 = logical, 1 = rotate
+    output reg [3:0] dout
+);
+
+always @(*) begin
+    if (dir == 0) begin
+        // Left shift / rotate
+        case (shamt)
+            2'b00: dout = din;
+            2'b01: dout = rotate ? {din[2:0], din[3]} : {din[2:0], 1'b0};
+            2'b10: dout = rotate ? {din[1:0], din[3:2]} : {din[1:0], 2'b00};
+            2'b11: dout = rotate ? {din[0], din[3:1]}   : {din[0], 3'b000};
+        endcase
+    end else begin
+        // Right shift / rotate
+        case (shamt)
+            2'b00: dout = din;
+            2'b01: dout = rotate ? {din[0], din[3:1]} : {1'b0, din[3:1]};
+            2'b10: dout = rotate ? {din[1:0], din[3:2]} : {2'b00, din[3:2]};
+            2'b11: dout = rotate ? {din[2:0], din[3]}   : {3'b000, din[3]};
+        endcase
+    end
+end
+
+endmodule
+
+
+

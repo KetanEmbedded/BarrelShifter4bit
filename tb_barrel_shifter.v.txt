@@ -1,0 +1,33 @@
+module tb_barrel_shifter4;
+    reg  [3:0] din;
+    reg  [1:0] shamt;
+    reg        dir;
+    reg        rotate;
+    wire [3:0] dout;
+
+    // Instantiate DUT (Design Under Test)
+    barrel_shifter4 dut (
+        .din(din),
+        .shamt(shamt),
+        .dir(dir),
+        .rotate(rotate),
+        .dout(dout)
+    );
+
+    initial begin
+        // Monitor values in simulation log
+        $monitor("time=%0t din=%b shamt=%b dir=%b rotate=%b -> dout=%b", 
+                  $time, din, shamt, dir, rotate, dout);
+
+        // Test cases
+        din = 4'b1011; shamt = 2'b00; dir=0; rotate=0; #10; 
+        shamt = 2'b01; #10; 
+        shamt = 2'b10; #10; 
+        shamt = 2'b11; #10;
+
+        dir=1; rotate=0; shamt=2'b01; #10;
+        rotate=1; shamt=2'b10; #10;
+        
+        $finish;
+    end
+endmodule
